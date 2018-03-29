@@ -72,7 +72,7 @@ public class AutoUpdateService extends Service {
         String weatherString = prefs.getString("weather", null);
         if (weatherString != null) {
             //有缓存时直接解析天气数据
-            final Weather weather = Utility.handleWeatherResponse(weatherString);
+            Weather weather = Utility.handleWeatherResponse(weatherString);
             String weatherId = weather.basic.weatherId;
             String weatherUrl = "https://free-api.heweather.com/s6/weather?location=" + weatherId + "&key=79c96833826942f0ad0a5e61828059fe";
             HttpUtil.sendOkHttpRequest(weatherUrl, new Callback() {
@@ -84,8 +84,8 @@ public class AutoUpdateService extends Service {
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     String responseText = response.body().string();
-                    Weather weather1 = Utility.handleWeatherResponse(responseText);
-                    if (weather1 != null && "ok".equals(weather1.status)) {
+                    Weather weather = Utility.handleWeatherResponse(responseText);
+                    if (weather != null && "ok".equals(weather.status)) {
                         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(AutoUpdateService.this).edit();
                         editor.putString("weather", responseText);
                         editor.apply();
